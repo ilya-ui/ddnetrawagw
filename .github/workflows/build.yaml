@@ -1,38 +1,33 @@
-name: Build
+name: Build Ubuntu 20.04
 
-on: 
+on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-  workflow_dispatch: # Позволяет запустить сборку вручную кнопкой
+    branches: [ main, master ]
+  workflow_dispatch:
 
 jobs:
-  build-linux:
+  build:
     runs-on: ubuntu-20.04
     steps:
-    - uses: actions/checkout@v4
-      with:
-        submodules: true
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive # Автоматически скачает карты и библиотеки
 
-    - name: Install dependencies
-      run: |
-        sudo apt-get update -y
-        sudo apt-get install -y pkg-config cmake ninja-build libfreetype6-dev libcurl4-openssl-dev libsqlite3-dev libpng-dev libsdl2-dev
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake pkg-config libfreetype6-dev libcurl4-openssl-dev libsqlite3-dev libpng-dev libsdl2-dev python3
 
-    - name: Configure CMake
-      run: |
-        mkdir build
-        cd build
-        cmake -G Ninja -DCMAKE_BUILD_TYPE=Release ..
+      - name: Configure and Build
+        run: |
+          mkdir build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=Release ..
+          make teeworlds_srv -j$(nproc)
 
-    - name: Build
-      run: |
-        cd build
-        ninja everything
-
-    - name: Upload Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: F-DDrace-Server-Ubuntu-20.04
-        path: build/teeworlds_srv
+      - name: Upload Result
+        uses: actions/upload-artifact@v4
+        with:
+          name: F-DDrace-Server-Ubuntu-20.04
+          path: build/teeworlds_srv
