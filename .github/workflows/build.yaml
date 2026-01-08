@@ -1,4 +1,4 @@
-name: Build Ubuntu 20.04
+name: Build Optimized Server (Ubuntu 20.04)
 
 on:
   push:
@@ -12,7 +12,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          submodules: recursive # Автоматически скачает карты и библиотеки
+          submodules: recursive
 
       - name: Install dependencies
         run: |
@@ -21,13 +21,22 @@ jobs:
 
       - name: Configure and Build
         run: |
+          rm -rf build
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=Release ..
-          make teeworlds_srv -j$(nproc)
+          cmake .. \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DPREFER_BUNDLED_LIBS=ON \
+            -DCLIENT=ON \
+            -DSERVER=ON \
+            -DWITH_MYSQL=OFF \
+            -DWITH_CURL=BUNDLED
+          make -j$(nproc)
 
       - name: Upload Result
         uses: actions/upload-artifact@v4
         with:
-          name: F-DDrace-Server-Ubuntu-20.04
-          path: build/teeworlds_srv
+          name: F-DDrace-Ubuntu-20.04
+          path: |
+            build/F-DDrace*
+            build/teeworlds_srv*
