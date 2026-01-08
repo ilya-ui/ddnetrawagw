@@ -22,6 +22,15 @@ other/freetype
 other/sdl
 Info.plist
 
+# Source files (don't ignore)
+!src/engine/uuid.h
+!src/tools/uuid.cpp
+!src/tools/crapnet.cpp
+!src/tools/map_resave.cpp
+!src/tools/map_version.cpp
+!src/tools/packetgen.cpp
+!src/versionsrv/mapversions.h
+
 crapnet*
 fake_server*
 map_resave*
