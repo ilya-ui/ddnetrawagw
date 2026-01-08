@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   build-linux:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v4
       with:
@@ -29,5 +29,5 @@ jobs:
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: F-DDrace-Server-Linux
+        name: F-DDrace-Server-Ubuntu-20.04
         path: build/teeworlds_srv
