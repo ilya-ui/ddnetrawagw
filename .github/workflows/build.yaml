@@ -24,10 +24,10 @@ jobs:
     - name: Build
       run: |
         cd build
-        ninja F-DDrace-Server # Проверьте имя таргета, обычно это имя сервера
+        ninja everything
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
         name: F-DDrace-Server-Linux
-        path: build/F-DDrace-Server
+        path: build/teeworlds_srv
