@@ -219,8 +219,11 @@ function(set_glob VAR GLOBBING EXTS DIRECTORY) # ...
 endfunction()
 
 function(set_src VAR GLOBBING DIRECTORY) # ...
-  set_glob(${VAR} ${GLOBBING} "c;cpp;h" ${DIRECTORY} ${ARGN})
-  set(${VAR} ${${VAR}} PARENT_SCOPE)
+  set(FILES)
+  foreach(file ${ARGN})
+    list(APPEND FILES "${PROJECT_SOURCE_DIR}/${DIRECTORY}/${file}")
+  endforeach()
+  set(${VAR} ${FILES} PARENT_SCOPE)
 endfunction()
 
 function(set_own_rpath TARGET)
@@ -1680,7 +1683,11 @@ endif()
 # VARIOUS TARGETS
 ########################################################################
 
-set_src(VERSIONSRV_SRC GLOB src/versionsrv mapversions.h versionsrv.cpp versionsrv.h)
+set(VERSIONSRV_SRC
+  src/versionsrv/mapversions.h
+  src/versionsrv/versionsrv.cpp
+  src/versionsrv/versionsrv.h
+)
 
 set(TARGET_VERSIONSRV versionsrv)
 
@@ -1691,26 +1698,22 @@ target_link_libraries(${TARGET_VERSIONSRV} ${LIBS})
 list(APPEND TARGETS_LINK ${TARGET_VERSIONSRV})
 
 set(TARGETS_TOOLS)
-set_src(TOOLS GLOB src/tools
-  crapnet.cpp
-  map_resave.cpp
-  map_version.cpp
-  packetgen.cpp
-  uuid.cpp
+set(TOOLS
+  crapnet
+  map_resave
+  map_version
+  packetgen
+  uuid
 )
-foreach(ABS_T ${TOOLS})
-  file(RELATIVE_PATH T "${PROJECT_SOURCE_DIR}/src/tools/" ${ABS_T})
-  if(T MATCHES "\\.cpp$")
-    string(REGEX REPLACE "\\.cpp$" "" TOOL "${T}")
-    add_executable(${TOOL} EXCLUDE_FROM_ALL
-      ${DEPS}
-      src/tools/${TOOL}.cpp
-      ${EXTRA_TOOL_SRC}
-      $<TARGET_OBJECTS:engine-shared>
-    )
-    target_link_libraries(${TOOL} ${LIBS})
-    list(APPEND TARGETS_TOOLS ${TOOL})
-  endif()
+foreach(TOOL ${TOOLS})
+  add_executable(${TOOL} EXCLUDE_FROM_ALL
+    ${DEPS}
+    src/tools/${TOOL}.cpp
+    ${EXTRA_TOOL_SRC}
+    $<TARGET_OBJECTS:engine-shared>
+  )
+  target_link_libraries(${TOOL} ${LIBS})
+  list(APPEND TARGETS_TOOLS ${TOOL})
 endforeach()
 
 list(APPEND TARGETS_OWN ${TARGETS_TOOLS})
