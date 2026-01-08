@@ -22,28 +22,23 @@ other/freetype
 other/sdl
 Info.plist
 
-# Source files (don't ignore)
-!src/engine/uuid.h
-!src/tools/uuid.cpp
-!src/tools/crapnet.cpp
-!src/tools/map_resave.cpp
-!src/tools/map_version.cpp
-!src/tools/packetgen.cpp
-!src/versionsrv/mapversions.h
+# DO NOT IGNORE SOURCE FILES
+!src/**/*.cpp
+!src/**/*.h
+!src/**/*.c
 
-crapnet*
-fake_server*
-map_resave*
-map_version*
-mastersrv*
-packetgen*
-teeworlds*
-!teeworlds.manifest
-!teeworlds.rc
-teeworlds_srv*
+# Still ignore the compiled binaries
+crapnet
+fake_server
+map_resave
+map_version
+mastersrv
+packetgen
+teeworlds
+teeworlds_srv
 testrunner
-uuid*
-versionsrv*
+uuid
+versionsrv
 libantibot.so
 
 # IDE project files
